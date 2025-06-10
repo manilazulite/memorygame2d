@@ -4,15 +4,23 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+    private BoardManager boardManager;
+
     [SerializeField] private Button generateGrid;
     [SerializeField] private TMP_InputField row_Input, column_Input;
+
+    public GridLayoutGroup BoardLayout;
 
     [SerializeField] private TextMeshProUGUI warningMsg;
 
     [SerializeField] private GameObject menuPanel;
 
+    public int Total = 0;
+
     private void Awake()
     {
+        instance = this;
         Initialize();
     }
 
@@ -25,6 +33,8 @@ public class GameManager : MonoBehaviour
     private void Initialize()
     {
         generateGrid.onClick.AddListener(CheckIfGridIsValid);
+        boardManager = FindFirstObjectByType<BoardManager>();
+        
     }
 
     // Update is called once per frame
@@ -35,15 +45,26 @@ public class GameManager : MonoBehaviour
 
     private void CheckIfGridIsValid()
     {
-        int total = int.Parse(row_Input.text) * int.Parse(column_Input.text);
+        Total = int.Parse(row_Input.text) * int.Parse(column_Input.text);
+        Debug.Log("total : " + Total);
 
-        bool cangenerate = (total % 2 == 0) ? true : false;
+        bool cangenerate = (Total % 2 == 0) ? true : false;
 
         if(cangenerate)
         {
             warningMsg.text = "Valid Combination";
             menuPanel.SetActive(false);
-            Invoke("GenerateGrid", 1f);
+
+            if (BoardLayout.constraint == GridLayoutGroup.Constraint.FixedColumnCount)
+            {
+                BoardLayout.constraintCount = int.Parse(row_Input.text);
+            }
+            else
+            {
+                BoardLayout.constraintCount = int.Parse(row_Input.text);
+            }
+
+            boardManager.GenerateGrid();
         }
         else
         {
@@ -51,9 +72,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void GenerateGrid()
-    {
-        //Create the cards
-    }
+    
 }
  
