@@ -4,10 +4,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class CardController : MonoBehaviour, IPointerClickHandler
+public class CardController : MonoBehaviour
 {
-    private CardData data;
-    private CardView view;
+    public int CardIndex;
 
     public GameObject BackImage;
 
@@ -23,11 +22,7 @@ public class CardController : MonoBehaviour, IPointerClickHandler
         
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        
-    }
-
+    
     /// <summary>
     /// rotate the card no clicked
     /// rotation value is supplied from the inspector
@@ -38,8 +33,4 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     {
         transform.DORotate(new Vector3(0, rotval, 0), 0.25f, RotateMode.Fast);
     }
-
-
-
-
 }

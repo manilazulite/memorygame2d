@@ -29,35 +29,55 @@ public class BoardManager : MonoBehaviour
 
     public void GenerateGrid()
     {
-        Debug.Log("instantiating : "+ GameManager.instance.Total);
-        //Create the cards
         for (int i = 0; i < GameManager.instance.Total; i++)
         {
-            Debug.Log("instantiating : " + i);
             GameObject go = Instantiate(cardPrefab);
             go.transform.parent = gridParent;
-
-            //Assign the texture to the image
-            //go.GetComponent<CardController>().BackImage.sprite = AssignTextureToTheCard();
         }
 
         AssignTextureToTheCard();
     }
 
+
     private void AssignTextureToTheCard()
     {
+        List<Sprite> templist = new List<Sprite>();
         int limit = GameManager.instance.Total / 2;
-        List<Sprite> templist = SpriteList;
-        Debug.Log(templist.Count);
+        templist = SpriteList;
+        int tempindexsetter = 0;
 
-        int index = Random.Range(0, templist.Count - 1);
-        Sprite sprite = templist[Random.Range(0, templist.Count - 1)];
+        Sprite sprite;
 
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < GameManager.instance.Total; i+=2)
         {
-            gridParent.GetChild(i).GetComponent<CardController>().BackImage.GetComponent<Image>().sprite = sprite;
+            int index = Random.Range(0, templist.Count - 1);
+            sprite = templist[index];
+
+            for (int j = i; j < i+2; j++)
+            {
+                gridParent.GetChild(j).name = j.ToString();
+                gridParent.GetChild(j).GetComponent<CardController>().CardIndex = tempindexsetter;
+                gridParent.GetChild(j).GetComponent<CardController>().BackImage.GetComponent<Image>().sprite = sprite;
+                
+            }
+
+            tempindexsetter++;
+            templist.RemoveAt(index);
         }
-        
-        templist.RemoveAt(index);
+
+        ShuffleTheCards();
+    }
+
+    private void ShuffleTheCards()
+    {
+        for(int i = 0; i < gridParent.childCount; i++)
+        {
+            gridParent.GetChild(i).SetSiblingIndex(Random.Range(0, gridParent.childCount - 1));
+        }
+    }
+
+    private void CompareCards()
+    {
+
     }
 }
